@@ -245,6 +245,9 @@ class Result(Generic[T, E]):
         else:
             return f"Err({self.unwrap_err()})"
 
+    def __str__(self) -> str:
+        return self.__repr__()
+
     def __setattr__(self, _name, _value) -> None:
         return NotImplemented
 
@@ -254,9 +257,9 @@ class Result(Generic[T, E]):
     def ok(cls, val: T) -> Result[T, E]:
         r = cls()
 
-        object.__setattr__(r, "__IS_OK", True)
-        object.__setattr__(r, "__INNER_OK_VAL", val)
-        object.__setattr__(r, "__INNER_ERR_VAL", NULL)
+        object.__setattr__(r, object.__getattribute__(cls, "__IS_OK"), True)
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_OK_VAL"), val)    # noqa
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_ERR_VAL"), NULL)  # noqa
 
         return r
 
@@ -264,16 +267,16 @@ class Result(Generic[T, E]):
     def err(cls, val: E) -> Result[T, E]:
         r = cls()
 
-        object.__setattr__(r, "__IS_OK", True)
-        object.__setattr__(r, "__INNER_OK_VAL", NULL)
-        object.__setattr__(r, "__INNER_ERR_VAL", val)
+        object.__setattr__(r, object.__getattribute__(cls, "__IS_OK"), False)
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_OK_VAL"), NULL)  # noqa
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_ERR_VAL"), val)  # noqa
 
         return r
 
     # ok or err
 
     def is_ok(self) -> bool:
-        return not not object.__getattribute__(self, "__IS_OK")
+        return not not object.__getattribute__(self, object.__getattribute__(self, "__IS_OK"))
 
     def is_ok_and(self, f: Callable[[T], bool]) -> bool:
         if self.is_err():
@@ -282,7 +285,7 @@ class Result(Generic[T, E]):
         return f(self.unwrap())
 
     def is_err(self) -> bool:
-        return not object.__getattribute__(self, vars()["__IS_OK"])
+        return not object.__getattribute__(self, object.__getattribute__(self, "__IS_OK"))
 
     def is_err_and(self, f: Callable[[E], bool]) -> bool:
         if self.is_ok():
@@ -308,7 +311,7 @@ class Result(Generic[T, E]):
         if self.is_err():
             raise Panic("Called `Result.unwrap` on an `Err` variant")
         else:
-            return object.__getattribute__(self, vars()["__INNER_OK_VAL"])
+            return object.__getattribute__(self, object.__getattribute__(self, "__INNER_OK_VAL"))
 
     def unwrap_or(self, val: E) -> T:
         if self.is_err():
@@ -331,6 +334,8 @@ class Result(Generic[T, E]):
     def unwrap_err(self) -> E:
         if self.is_ok():
             raise Panic("Called `Result.unwrap_err` on an `Ok` variant")
+        else:
+            return object.__getattribute__(self, object.__getattribute__(self, "__INNER_ERR_VAL"))
 
     def expect(self, msg: str) -> T:
         if self.is_err():
