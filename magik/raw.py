@@ -35,8 +35,8 @@ class Option(Generic[T]):
     def some(cls, val: T) -> Option[T]:
         o = cls()
 
-        object.__setattr__(o, "__IS_SOME", True)
-        object.__setattr__(o, "__INNER_SOME_VAL", val)
+        object.__setattr__(o, object.__getattribute__(cls, "__IS_SOME"), True)
+        object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), val)
 
         return o
 
@@ -44,8 +44,8 @@ class Option(Generic[T]):
     def none(cls) -> Option[T]:
         o = cls()
 
-        object.__setattr__(o, "__IS_SOME", False)
-        object.__setattr__(o, "__INNER_SOME_VAL", NULL)
+        object.__setattr__(o, object.__getattribute__(cls, "__IS_SOME"), False)
+        object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), NULL)
 
         return o
 
@@ -59,7 +59,7 @@ class Option(Generic[T]):
         return not self.is_some()
 
     def is_some(self) -> bool:
-        return not not object.__getattribute__(self, self.__IS_SOME)
+        return not not object.__getattribute__(self, object.__getattribute__(self, "__INNER_SOME_VAL"))
 
     def is_some_and(self, f: Callable[[T], bool]) -> bool:
         if self.is_none():
@@ -87,7 +87,7 @@ class Option(Generic[T]):
         if self.is_none():
             raise Panic("Called `Option.unwrap` on a `None` value")
         else:
-            return object.__getattribute__(self, self.__INNER_SOME_VAL)
+            return object.__getattribute__(self, object.__getattribute__(self, "__INNER_SOME_VAL"))
 
     def unwrap_or(self, val: T) -> T:
         if self.is_none():
@@ -187,8 +187,8 @@ class Option(Generic[T]):
         if self.is_some():
             return self.unwrap()
 
-        object.__setattr__(self, "__IS_SOME", True)
-        object.__setattr__(self, "__INNER_SOME_VAL", val)
+        object.__setattr__(self, object.__setattr__(self, "__IS_SOME"), True)
+        object.__setattr__(self, object.__setattr__(self, "__INNER_SOME_VAL"), val)
 
         return val
 
@@ -206,8 +206,8 @@ class Option(Generic[T]):
         else:
             inner = Option.none()
 
-        object.__setattr__(self, "__IS_SOME", True)
-        object.__setattr__(self, "__INNER_SOME_VAL", val)
+        object.__setattr__(self, object.__getattribute__(self, "__IS_SOME"), True)
+        object.__setattr__(self, object.__getattribute__(self, "__INNER_SOME_VAL"), val)
 
         return inner
 
@@ -219,8 +219,8 @@ class Option(Generic[T]):
         else:
             inner = Option.none()
 
-        object.__setattr__(self, self.__IS_SOME, False)
-        object.__setattr__(self, self.__INNER_SOME_VAL, NULL)
+        object.__setattr__(self, object.__getattribute__(self, "__IS_SOME"), False)
+        object.__setattr__(self, object.__getattribute__(self, "__INNER_SOME_VAL"), NULL)
 
         return inner
 
