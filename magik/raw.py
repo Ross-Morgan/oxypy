@@ -52,9 +52,7 @@ class Option(Generic[T], Default):
         o = cls()
 
         object.__setattr__(o, object.__getattribute__(cls, "__IS_SOME"), True)
-        object.__setattr__(
-            o, object.__getattribute__(cls, "__INNER_SOME_VAL"), val
-        )
+        object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), val)
 
         return o
 
@@ -65,9 +63,7 @@ class Option(Generic[T], Default):
         o = cls()
 
         object.__setattr__(o, object.__getattribute__(cls, "__IS_SOME"), False)
-        object.__setattr__(
-            o, object.__getattribute__(cls, "__INNER_SOME_VAL"), NULL
-        )
+        object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), NULL)
 
         return o
 
@@ -263,9 +259,7 @@ class Option(Generic[T], Default):
             return self.unwrap()
 
         object.__setattr__(self, object.__setattr__(self, "__IS_SOME"), True)
-        object.__setattr__(
-            self, object.__setattr__(self, "__INNER_SOME_VAL"), val
-        )
+        object.__setattr__(self, object.__setattr__(self, "__INNER_SOME_VAL"), val)
 
         return val
 
