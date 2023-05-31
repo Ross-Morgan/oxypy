@@ -52,7 +52,9 @@ class Option(Generic[T], Default):
         o = cls()
 
         object.__setattr__(o, object.__getattribute__(cls, "__IS_SOME"), True)
-        object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), val)  # noqa
+        object.__setattr__(
+            o, object.__getattribute__(cls, "__INNER_SOME_VAL"), val
+        )
 
         return o
 
@@ -63,7 +65,9 @@ class Option(Generic[T], Default):
         o = cls()
 
         object.__setattr__(o, object.__getattribute__(cls, "__IS_SOME"), False)
-        object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), NULL)  # noqa
+        object.__setattr__(
+            o, object.__getattribute__(cls, "__INNER_SOME_VAL"), NULL
+        )
 
         return o
 
@@ -242,8 +246,7 @@ class Option(Generic[T], Default):
         return f(self.unwrap())
 
     def map_or_else(self, default: E) -> Result[T, E]:
-        """
-        """
+        """ """
         if self.is_none():
             return Result.err(default)
 
@@ -260,7 +263,9 @@ class Option(Generic[T], Default):
             return self.unwrap()
 
         object.__setattr__(self, object.__setattr__(self, "__IS_SOME"), True)
-        object.__setattr__(self, object.__setattr__(self, "__INNER_SOME_VAL"), val)  # noqa
+        object.__setattr__(
+            self, object.__setattr__(self, "__INNER_SOME_VAL"), val
+        )
 
         return val
 
@@ -332,20 +337,19 @@ class Option(Generic[T], Default):
         if not (self.is_some() and other.is_some()):
             return Option.none
 
-        return Option.some((
-            self.unwrap(),
-            other.unwrap(),
-        ))
+        return Option.some(
+            (
+                self.unwrap(),
+                other.unwrap(),
+            )
+        )
 
     def zip_with(self, other: Option[U], f: Callable[[T, U], R]) -> Option[R]:
         """Zips `self` and `other` with the specified function"""
         if not (self.is_some() and other.is_some()):
             return Option.none
 
-        return Option.some(f(
-            self.unwrap(),
-            other.unwrap()
-        ))
+        return Option.some(f(self.unwrap(), other.unwrap()))
 
 
 class Result(Generic[T, E]):
@@ -407,8 +411,12 @@ class Result(Generic[T, E]):
         r = cls()
 
         object.__setattr__(r, object.__getattribute__(cls, "__IS_OK"), False)
-        object.__setattr__(r, object.__getattribute__(cls, "__INNER_OK_VAL"), NULL)  # noqa
-        object.__setattr__(r, object.__getattribute__(cls, "__INNER_ERR_VAL"), val)  # noqa
+        object.__setattr__(
+            r, object.__getattribute__(cls, "__INNER_OK_VAL"), NULL
+        )  # noqa
+        object.__setattr__(
+            r, object.__getattribute__(cls, "__INNER_ERR_VAL"), val
+        )  # noqa
 
         return r
 
