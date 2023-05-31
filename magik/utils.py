@@ -7,13 +7,15 @@ class Null:
     def __repr__(self) -> str:
         return "<NULL>"
 
+
 class Panic(Exception):
     ...  # noqa
 
 
-class Default(Protocol, Generic[T_co]):
+class Default(Generic[T_co], Protocol):
     @classmethod
     def default(cls: Type[T_co]) -> T_co:
         ...  # noqa
+
 
 NULL = Null()
