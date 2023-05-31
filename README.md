@@ -25,7 +25,7 @@ Transpose methods are also impossible due to the weak, dynamic type system
 ## Use
 
 
-|Rust               |Python|
+|Rust               |Python            |
 |-------------------|------------------|
 | `Option::Some(v)` | `Option.some(v)` |
 | `Option::None`    | `Option.none()`  |
