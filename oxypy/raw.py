@@ -94,7 +94,7 @@ class Option(Generic[T], Default):
 
     def is_some_and(self, f: Callable[[T], bool]) -> bool:
         """
-        If self is `Some` variant and satisfies function, returns `True`
+        If self is `Some` variant and matches predicate, returns `True`
 
         If self is `None` variant, returns `False`
         """
@@ -120,7 +120,7 @@ class Option(Generic[T], Default):
         """
         If self is `Some` variant, returns contained value wrapped in `Ok`
 
-        If self is `None` variant, returns result of specified function
+        If self is `None` variant, returns result of specified predicate
         wrapped in `Err`
         """
         if self.is_some():
@@ -154,16 +154,19 @@ class Option(Generic[T], Default):
         else:
             return self.unwrap()
 
-    # TODO Docs
-
     def unwrap_or_default(self, default: Default[T]) -> T:
+        """
+        If self is `Some` variant, returns contained value
+
+        If self is `None` variant, returns default value for type
+        """
         return self.unwrap_or(default.default())
 
     def unwrap_or_else(self, f: Callable[[], T]) -> T:
         """
         If self is `Some` variant, returns contained value
 
-        If self is `None` variant, returns result of specified function
+        If self is `None` variant, returns result of specified predicate
         """
         if self.is_none():
             return f()
@@ -171,6 +174,11 @@ class Option(Generic[T], Default):
             return self.unwrap()
 
     def expect(self, msg: str) -> T:
+        """
+        If self is `Some` variant, returns contained value
+
+        If self is `None` variant, panics with specified error message
+        """
         if self.is_none():
             raise Panic(msg)
         else:
@@ -179,6 +187,7 @@ class Option(Generic[T], Default):
     # inspect
 
     def inspect(self, f: Callable[[T], U]) -> Option[T]:
+        """Calls predicate on `Some` variant without modifying it"""
         if self.is_none():
             return Option.none()
 
@@ -190,6 +199,11 @@ class Option(Generic[T], Default):
     # filter
 
     def filter(self, f: Callable[[T], bool]) -> Option[T]:
+        """
+        If self is `Some` variant, returns `Some` variant if contained value matches predicate
+
+        If self is `None` variant, returns `None` variant
+        """
         if self.is_some() and f(self.unwrap()):
             return Option.some(self.unwrap())
 
@@ -198,17 +212,33 @@ class Option(Generic[T], Default):
     # contains
 
     def contains(self, val: U) -> bool:
+        """
+        If self is `Some` variant, and contained value
+        equals specified value, returns `True`
+
+        If self is `None` variant, returns `False`
+        """
         return self.map(lambda x: x == val).unwrap_or(False)
 
     # and
 
     def and_(self, optb: Option[U]) -> Option[U]:
+        """
+        If self is `Some` variant, returns specified option
+
+        If self is `None` variant, returns `None` variant
+        """
         if self.is_none():
             return Option.none()
 
         return optb
 
     def and_then(self, f: Callable[[T], Option[U]]) -> Option[U]:
+        """
+        If self is `Some` variant, returns result of specified predicate
+
+        If self is `None` variant, returns `None` variant
+        """
         if self.is_none():
             return Option.none()
 
@@ -217,9 +247,19 @@ class Option(Generic[T], Default):
     # or
 
     def or_(self, optb: Option[T]) -> Option[T]:
+        """
+        If self is `Some` variant, returns contained value wrapped in `Some`
+
+        If self is `None` variant, returns specified option
+        """
         return self.map(lambda x: Option.some(x)).unwrap_or(optb)
 
     def or_else(self, f: Callable[[], Option[T]]):
+        """
+        If self is `Some` variant, returns contained value wrapped in `Some`
+
+        If self is `None` variant, returns result of specified predicate
+        """
         if self.is_some():
             return Option.some(self.unwrap())
 
@@ -228,6 +268,11 @@ class Option(Generic[T], Default):
     # map
 
     def map(self, f: Callable[[T], U]) -> Option[U]:
+        """
+        If self is `Some` variant, returns `Some` variant with modified inner value
+
+        If self is `None` variant, returns `None` variant
+        """
         if self.is_none():
             return Option.none()
 
@@ -236,23 +281,33 @@ class Option(Generic[T], Default):
         return Option.some(modified_inner)
 
     def map_or(self, default: U, f: Callable[[T], U]) -> U:
+        """
+        If self is `Some` variant, returns `Some` variant with modified inner value
+
+        If self is `None` variant, returns `None` variant
+        """
         if self.is_none():
             return default
 
         return f(self.unwrap())
 
-    def map_or_else(self, default: E) -> Result[T, E]:
-        """ """
-        if self.is_none():
-            return Result.err(default)
+    def map_or_else(self, default: Callable[[], U], f: Callable[[T], U]) -> U:
+        """
+        If self is `Some` variant, returns modified inner value
 
-        return Result.ok(self.unwrap())
+        If self is `None` variant, returns result of specified predicate
+        """
+        if self.is_none():
+            return default()
+
+        return f(self.unwrap())
 
     # get
 
     def get_or_insert(self, val: T) -> T:
         """
         If self is `Some` variant, returns contained value
+
         If self is `None` variant, sets to and returns specified value
         """
         if self.is_some():
@@ -275,25 +330,21 @@ class Option(Generic[T], Default):
         """
         If self is `Some` variant, returns contained value
 
-        If self is `None` variant, sets to and returns function result
+        If self is `None` variant, sets to and returns predicate result
         """
         return self.get_or_insert(f())
 
     # replace
 
     def replace(self, val: T) -> Option[T]:
-        """Make self `Some` variant by replacing existing value"""
+        """Returns contained value then sets inner value to specified value"""
         if self.is_some():
             inner = Option.some(self.unwrap())
         else:
             inner = Option.none()
 
-        object.__setattr__(
-            self, object.__getattribute__(self, "__IS_SOME"), True
-        )  # noqa
-        object.__setattr__(
-            self, object.__getattribute__(self, "__INNER_SOME_VAL"), val
-        )  # noqa
+        object.__setattr__(self, object.__getattribute__(self, "__IS_SOME"), True)
+        object.__setattr__(self, object.__getattribute__(self, "__INNER_SOME_VAL"), val)
 
         return inner
 
@@ -306,12 +357,10 @@ class Option(Generic[T], Default):
         else:
             inner = Option.none()
 
-        object.__setattr__(
-            self, object.__getattribute__(self, "__IS_SOME"), False
-        )  # noqa
+        object.__setattr__(self, object.__getattribute__(self, "__IS_SOME"), False)
         object.__setattr__(
             self, object.__getattribute__(self, "__INNER_SOME_VAL"), NULL
-        )  # noqa``
+        )
 
         return inner
 
@@ -339,7 +388,7 @@ class Option(Generic[T], Default):
         )
 
     def zip_with(self, other: Option[U], f: Callable[[T, U], R]) -> Option[R]:
-        """Zips `self` and `other` with the specified function"""
+        """Zips `self` and `other` with the specified predicate"""
         if not (self.is_some() and other.is_some()):
             return Option.none
 
@@ -390,12 +439,8 @@ class Result(Generic[T, E]):
         r = cls()
 
         object.__setattr__(r, object.__getattribute__(cls, "__IS_OK"), True)
-        object.__setattr__(
-            r, object.__getattribute__(cls, "__INNER_OK_VAL"), val
-        )  # noqa
-        object.__setattr__(
-            r, object.__getattribute__(cls, "__INNER_ERR_VAL"), NULL
-        )  # noqa
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_OK_VAL"), val)
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_ERR_VAL"), NULL)
 
         return r
 
@@ -405,12 +450,8 @@ class Result(Generic[T, E]):
         r = cls()
 
         object.__setattr__(r, object.__getattribute__(cls, "__IS_OK"), False)
-        object.__setattr__(
-            r, object.__getattribute__(cls, "__INNER_OK_VAL"), NULL
-        )  # noqa
-        object.__setattr__(
-            r, object.__getattribute__(cls, "__INNER_ERR_VAL"), val
-        )  # noqa
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_OK_VAL"), NULL)
+        object.__setattr__(r, object.__getattribute__(cls, "__INNER_ERR_VAL"), val)
 
         return r
 
@@ -423,20 +464,20 @@ class Result(Generic[T, E]):
         )
 
     def is_ok_and(self, f: Callable[[T], bool]) -> bool:
-        """Returns if self is an `Ok` variant and satifies a function"""
+        """Returns `True` if self is an `Ok` variant and matches predicate"""
         if self.is_err():
             return False
 
         return f(self.unwrap())
 
     def is_err(self) -> bool:
-        """Returns if self is an `Err` variant"""
+        """Returns `True` if self is an `Err` variant"""
         return not object.__getattribute__(
             self, object.__getattribute__(self, "__IS_OK")
         )
 
     def is_err_and(self, f: Callable[[E], bool]) -> bool:
-        """Returns if self is an `Err` variatn adn satisfies a function"""
+        """Returns `False` if self is an `Err` variant and matches predicate"""
         if self.is_ok():
             return False
 
@@ -472,7 +513,7 @@ class Result(Generic[T, E]):
         """
         If self is `Ok` variant, returns contained value
 
-        If self is `Err` variant, returns function result, passing it the err
+        If self is `Err` variant, returns predicate result, passing it the err
         """
         if self.is_err():
             return f(self.unwrap_err())
@@ -544,7 +585,7 @@ class Result(Generic[T, E]):
     # map
 
     def map(self, f: Callable[[T], U]) -> Result[U, E]:
-        """If self is an `Ok` variant, transform it with the function"""
+        """If self is an `Ok` variant, transform it with the predicate"""
         if self.is_ok():
             return Result.ok(f(self.unwrap()))
         else:
@@ -552,7 +593,7 @@ class Result(Generic[T, E]):
 
     def map_or(self, default: U, f: Callable[[T], U]) -> U:
         """
-        If self is an `Ok` variant, transform it with the function
+        If self is an `Ok` variant, transform it with the predicate
 
         If self is an `Err` variant, replace it with the value
         """
@@ -563,9 +604,9 @@ class Result(Generic[T, E]):
 
     def map_or_else(self, default: Callable[[E], U], f: Callable[[T], U]) -> U:
         """
-        If self is an `Ok` variant, transform it with the function
+        If self is an `Ok` variant, transform it with the predicate
 
-        If self is an `Err` variant, replace it with the function value
+        If self is an `Err` variant, replace it with the predicate value
         """
         if self.is_ok():
             return f(self.unwrap())
@@ -573,7 +614,7 @@ class Result(Generic[T, E]):
             return default()
 
     def map_err(self, f: Callable[[E], F]) -> Result[T, F]:
-        """If self is an `Err` variant, transform it with the function f"""
+        """If self is an `Err` variant, transform it with the predicate f"""
         if self.is_ok():
             return Result.ok(self.unwrap())
         else:
@@ -582,7 +623,7 @@ class Result(Generic[T, E]):
     # inspect
 
     def inspect(self, f: Callable[[T], None]) -> Result[T, E]:
-        """Calls a function on an `Ok` variant without modifying it"""
+        """Calls a predicate on an `Ok` variant without modifying it"""
         if self.is_ok():
             f(self.unwrap())
 
@@ -591,7 +632,7 @@ class Result(Generic[T, E]):
             return Result.err(self.unwrap_err())
 
     def inspect_err(self, f: Callable[[E], None]) -> Result[T, E]:
-        """Calls a function on an `Err` variant without modifying the value"""
+        """Calls a predicate on an `Err` variant without modifying the value"""
         if self.is_ok():
             return Result.ok(self.unwrap())
         else:
