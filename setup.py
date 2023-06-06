@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-AUTHOR = "Ross Mogan"
+AUTHOR = "Ross Morgan"
 AUTHOR_EMAIL = "rmorgan512@protonmail.ch"
 DESC = "Fully-featured implementation of Rusts `Option` and `Result` in Python"
 URL = "https://github.com/Ross-Morgan/oxypy/archive/refs/tags/v0.0.1.tar.gz"
