@@ -1,5 +1,6 @@
-from oxypy import Option, Result
+from oxypy import Option, Result, Panic
 
+import pytest
 
 def test_option_variant_validation():
     none_opt = Option.none()
@@ -21,3 +22,9 @@ def test_result_variant_validation():
 
     assert err_res.is_ok() is False
     assert err_res.is_err() is True
+
+
+def test_some_option_unwrapping():
+    some_opt = Option.some(100)
+
+    assert some_opt.unwrap() == 100
