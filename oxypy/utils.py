@@ -12,7 +12,7 @@ class Panic(Exception):
     ...  # noqa
 
 
-class Default(Generic[T_co], Protocol):
+class Default(Protocol, Generic[T_co]):
     @classmethod
     def default(cls: Type[T_co]) -> T_co:
         ...  # noqa
