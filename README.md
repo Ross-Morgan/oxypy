@@ -36,11 +36,13 @@ Transpose methods are also impossible due to the weak, dynamic type system
 
 ## Examples
 
-`Option[T]` and `Result[T, E]` can be imported directly from the `magic` library
+**Note:** *Type annotations are not always necessary, but are done here for brevity*
+
+`Option[T]` and `Result[T, E]` can be imported directly from the `oxypy` library
 
 
 ```python
-from magik import Option, Result
+from oxypy import Option, Result
 
 some: Option[int] = Option.some(10)
 none: Option[int] = Option.none()
