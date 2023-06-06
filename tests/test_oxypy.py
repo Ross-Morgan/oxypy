@@ -1,6 +1,5 @@
-from oxypy import Option, Result, Panic
+from oxypy import Option, Result
 
-import pytest
 
 def test_option_variant_validation():
     none_opt = Option.none()
