@@ -17,7 +17,7 @@ R = TypeVar("R")
 T_co = TypeVar("T_co", covariant=True)
 
 
-class Option(Generic[T], Default):
+class Option(Default, Generic[T]):
     """
     Class containing a `Some(T)` or `None` variant
 
@@ -56,7 +56,6 @@ class Option(Generic[T], Default):
 
         return o
 
-    @property
     @classmethod
     def none(cls) -> Option[T]:
         """Creates new `None` variant of `Option`"""
@@ -88,9 +87,7 @@ class Option(Generic[T], Default):
 
         If self is `None` variant, returns `False`
         """
-        return not not object.__getattribute__(
-            self, object.__getattribute__(self, "__INNER_SOME_VAL")
-        )
+        return object.__getattribute__(self, object.__getattribute__(self, "__IS_SOME"))
 
     def is_some_and(self, f: Callable[[T], bool]) -> bool:
         """
@@ -313,8 +310,8 @@ class Option(Generic[T], Default):
         if self.is_some():
             return self.unwrap()
 
-        object.__setattr__(self, object.__setattr__(self, "__IS_SOME"), True)
-        object.__setattr__(self, object.__setattr__(self, "__INNER_SOME_VAL"), val)
+        object.__setattr__(self, object.__getattribute__(self, "__IS_SOME"), True)
+        object.__setattr__(self, object.__getattribute__(self, "__INNER_SOME_VAL"), val)
 
         return val
 
@@ -378,7 +375,7 @@ class Option(Generic[T], Default):
     def zip_(self, other: Option[U]) -> Option[tuple[T, U]]:
         """Zips `self` with `other`"""
         if not (self.is_some() and other.is_some()):
-            return Option.none
+            return Option.none()
 
         return Option.some(
             (
@@ -390,7 +387,7 @@ class Option(Generic[T], Default):
     def zip_with(self, other: Option[U], f: Callable[[T, U], R]) -> Option[R]:
         """Zips `self` and `other` with the specified predicate"""
         if not (self.is_some() and other.is_some()):
-            return Option.none
+            return Option.none()
 
         return Option.some(f(self.unwrap(), other.unwrap()))
 
@@ -429,7 +426,7 @@ class Result(Generic[T, E]):
         return self.__repr__()
 
     def __setattr__(self, _name, _value) -> None:
-        return NotImplemented
+        pass
 
     # defaults
 
@@ -611,7 +608,7 @@ class Result(Generic[T, E]):
         if self.is_ok():
             return f(self.unwrap())
         else:
-            return default()
+            return default(self.unwrap_err())
 
     def map_err(self, f: Callable[[E], F]) -> Result[T, F]:
         """If self is an `Err` variant, transform it with the predicate f"""
