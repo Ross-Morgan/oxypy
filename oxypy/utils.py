@@ -19,6 +19,7 @@ class Panic(Exception):
 
         return f"{name}({message!r})"
 
+
 class Default(Protocol, Generic[T_co]):
     @classmethod
     def default(cls: Type[T_co]) -> T_co:
