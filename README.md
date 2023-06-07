@@ -1,7 +1,5 @@
-# Magik
-
+# oxypy
 ![Tests](https://github.com/Ross-Morgan/actions/workflows/tests.yml/badge.svg)
-![Coverage]()
 
 A fully-featured implementation of Rust's `Option<T>` and `Result<T, E>` in Python
 
