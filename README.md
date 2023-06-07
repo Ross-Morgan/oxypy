@@ -1,5 +1,5 @@
 # oxypy
-![Tests](https://github.com/Ross-Morgan/actions/workflows/tests.yml/badge.svg)
+![Tests](https://img.shields.io/github/actions/workflow/status/Ross-Morgan/oxypy/tests.yml)
 
 A fully-featured implementation of Rust's `Option<T>` and `Result<T, E>` in Python
 
