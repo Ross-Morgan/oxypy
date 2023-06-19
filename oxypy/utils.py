@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Generic, Protocol, Type, TypeVar
 
 T_co = TypeVar("T_co", covariant=True)
