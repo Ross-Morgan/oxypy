@@ -1,8 +1,4 @@
-from __future__ import annotations
-
-from typing import Generic, Protocol, Type, TypeVar
-
-T_co = TypeVar("T_co", covariant=True)
+__all__ = ["NULL"]
 
 
 class Null:
@@ -10,22 +6,7 @@ class Null:
         return "<NULL>"
 
 
-class Panic(Exception):
-    def __init__(self, message: str) -> None:
-        self.__message = message
-        super().__init__()
-
-    def __repr__(self) -> str:
-        name = type(self).__name__
-        message = self.__message
-
-        return f"{name}({message!r})"
-
-
-class Default(Protocol, Generic[T_co]):
-    @classmethod
-    def default(cls: Type[T_co]) -> T_co:
-        ...  # noqa
-
-
 NULL = Null()
+
+Null.__new__ = lambda cls: Exception("Cannot create NULL")  # type: ignore
+del Null
