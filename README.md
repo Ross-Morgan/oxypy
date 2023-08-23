@@ -3,7 +3,9 @@
 
 A fully-featured implementation of Rust's `Option<T>` and `Result<T, E>` in Python
 
-Using some slightly cursed workarounds, the inner value is pseudo-private. It's difficult to access the inner value but you can.
+Inner values are designed to be quasi-private, since true privacy is impossible without building the package in C or Rust, and I didn't want to extras of doing that.
+
+The source code is cursed yet expandable, well-documented and somehow beautiful
 
 ---
 
@@ -18,9 +20,10 @@ Removed Methods:
 - Unchecked methods
 - Transpose methods
 
-Methods relating to references are useless due to lack of them in Python.
-
-Transpose methods are also impossible due to the dynamic type system
+Reasons:
+- Methods relating to references are useless due to lack of them in Python.
+- Unchecked methods are unneccessary due to the inherent inability to be unsafe.
+- Transpose methods are also impossible due to the dynamic type system.
 
 ---
 
