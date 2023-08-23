@@ -1,6 +1,7 @@
 import sys
 import typing
 
+
 class Panic(Exception):
     """
     A very basic Exception wrapper for Rust's `panic!()` functionality
@@ -16,9 +17,9 @@ class Panic(Exception):
         return f"{name}({message!r})"
 
     def __call__(*args, **kwargs) -> typing.NoReturn:
-        sys.exit_(1)
+        sys.exit(1)
 
 
 def panic(*, msg: str) -> typing.NoReturn:
     print("Panicked:", msg)
-    sys.exit_(1)
+    sys.exit(1)
