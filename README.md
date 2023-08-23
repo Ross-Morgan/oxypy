@@ -20,7 +20,7 @@ Removed Methods:
 
 Methods relating to references are useless due to lack of them in Python.
 
-Transpose methods are also impossible due to the weak, dynamic type system
+Transpose methods are also impossible due to the dynamic type system
 
 ---
 
