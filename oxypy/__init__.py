@@ -3,8 +3,8 @@
 """
 
 __all__ = ["Either", "Default", "Option", "Panic", "Result"]
-__version__ = "0.1.0"
-__version_info__ = (0, 1, 0)
+__version__ = "1.0.1"
+__version_info__ = (1, 0, 1)
 __author__ = "Ross Morgan"
 __email__ = "rmorgan512@protonmail.ch"
 
