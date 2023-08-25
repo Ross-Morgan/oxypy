@@ -1,4 +1,1 @@
-from oxypy import Option
-
-
-
+from oxypy import Option  # noqa
