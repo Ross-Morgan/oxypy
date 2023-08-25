@@ -1,3 +1,7 @@
-__all__ = ["test_oxypy"]
+__all__ = [
+    "test_either",
+    "test_option",
+    "test_result",
+]
 
-from . import test_oxypy
+from . import test_either, test_option, test_result
