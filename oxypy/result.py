@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import Callable, Generic, Iterator, TypeVar
 
+from .debug import Debug
 from .default import Default
 from .panic import Panic
 from .utils import NULL
@@ -17,7 +18,7 @@ U = TypeVar("U")
 R = TypeVar("R")
 
 
-class Result(Generic[T, E]):
+class Result(Debug, Generic[T, E]):
     """
     Class containing either an `Ok(T)` or `Err(E)` variant
 
@@ -48,6 +49,9 @@ class Result(Generic[T, E]):
             return f"Err({self.unwrap_err()})"
 
     def __str__(self) -> str:
+        return self.__repr__()
+
+    def __debug_str__(self) -> str:
         return self.__repr__()
 
     def __setattr__(self, _name, _value) -> None:
@@ -149,7 +153,7 @@ class Result(Generic[T, E]):
         If self is `Err` variant, returns default value for type
         """
         if self.is_err():
-            return default.default()
+            return default.__default__()
         else:
             return self.unwrap()
 
