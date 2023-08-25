@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import Callable, Generic, Iterator, TypeVar
 
+from .debug import Debug
 from .default import Default
 from .panic import Panic
 from .result import Result
@@ -15,7 +16,7 @@ U = TypeVar("U")
 R = TypeVar("R")
 
 
-class Option(Default, Generic[T]):
+class Option(Debug, Default, Generic[T]):
     """
     Class containing a `Some(T)` or `None` variant
 
@@ -42,10 +43,18 @@ class Option(Default, Generic[T]):
     def __str__(self) -> str:
         return self.__repr__()
 
+    def __debug_str__(self) -> str:
+        return self.__repr__()
+
     def __setattr__(self, _name, _val):
         return NotImplemented
 
     # defaults
+
+    @classmethod
+    def __default__(cls) -> Option[T]:
+        """Specifies default variant for `Option`"""
+        return cls.none()
 
     @classmethod
     def some(cls, val: T) -> Option[T]:
@@ -66,11 +75,6 @@ class Option(Default, Generic[T]):
         object.__setattr__(o, object.__getattribute__(cls, "__INNER_SOME_VAL"), NULL)
 
         return o
-
-    @classmethod
-    def default(cls) -> Option[T]:
-        """Specifies default variant for `Option`"""
-        return cls.none()
 
     # some or none
 
@@ -158,7 +162,7 @@ class Option(Default, Generic[T]):
 
         If self is `None` variant, returns default value for type
         """
-        return self.unwrap_or(default.default())
+        return self.unwrap_or(default.__default__())
 
     def unwrap_or_else(self, f: Callable[[], T]) -> T:
         """
@@ -322,7 +326,7 @@ class Option(Default, Generic[T]):
 
         If self is `None` variant, sets to and returns default for type
         """
-        return self.get_or_insert(default.default())
+        return self.get_or_insert(default.__default__())
 
     def get_or_insert_with(self, f: Callable[[], T]) -> T:
         """
