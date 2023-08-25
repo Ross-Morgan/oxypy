@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import Callable, Generic, TypeVar
 
+from .debug import Debug
 from .default import Default
 from .panic import Panic
 from .utils import NULL
@@ -19,7 +20,7 @@ K = TypeVar("K")
 S = TypeVar("S")
 
 
-class Either(Generic[L, R]):
+class Either(Debug, Generic[L, R]):
     """
     Class containing either an `Left(L)` or `Right(R)` variant
 
@@ -54,6 +55,9 @@ class Either(Generic[L, R]):
 
     def __setattr__(self, _name, _value) -> None:
         raise NotImplementedError
+
+    def __debug_str__(self) -> str:
+        return self.__repr__()
 
     # defaults
 
@@ -226,7 +230,7 @@ class Either(Generic[L, R]):
         if self.is_left():
             return self.unwrap_left()
         else:
-            return default.default()
+            return default.__default__()
 
     def left_or_else(self, g: Callable[[R], L]) -> L:
         """
@@ -259,7 +263,7 @@ class Either(Generic[L, R]):
         if self.is_right():
             return self.unwrap_right()
         else:
-            return default.default()
+            return default.__default__()
 
     def right_or_else(self, f: Callable[[L], R]) -> R:
         """
