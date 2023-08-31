@@ -12,7 +12,7 @@ def test_is_none_and_some():
     assert some_opt.is_some() is True
 
 
-def test_unwrapping():
+def test_unwrap():
     some_opt = Option.some(100)
 
     assert some_opt.unwrap() == 100
