@@ -37,7 +37,7 @@ class Option(Debug, Default, Generic[T]):
 
     def __repr__(self) -> str:
         if self.is_some():
-            return f"Some({self.unwrap()})"
+            return f"Some({self.unwrap()!r})"
         return "None"
 
     def __str__(self) -> str:
