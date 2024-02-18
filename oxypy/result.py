@@ -44,9 +44,9 @@ class Result(Debug, Generic[T, E]):
 
     def __repr__(self) -> str:
         if self.is_ok():
-            return f"Ok({self.unwrap()})"
+            return f"Ok({self.unwrap()!r})"
         else:
-            return f"Err({self.unwrap_err()})"
+            return f"Err({self.unwrap_err()!r})"
 
     def __str__(self) -> str:
         return self.__repr__()
