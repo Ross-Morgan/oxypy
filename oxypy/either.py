@@ -46,9 +46,9 @@ class Either(Debug, Generic[L, R]):
 
     def __repr__(self) -> str:
         if self.is_left():
-            return f"Left({self.unwrap_left()})"
+            return f"Left({self.unwrap_left()!r})"
         else:
-            return f"Right({self.unwrap_right()})"
+            return f"Right({self.unwrap_right()!r})"
 
     def __str__(self) -> str:
         return self.__repr__()
