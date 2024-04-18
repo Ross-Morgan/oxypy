@@ -14,7 +14,7 @@ def test_is_ok_and_err() -> None:
 
 def test_unwrap() -> None:
     ok_res: Result[int, str] = Result.ok(42)
-    err_res: Result[int, str] = Result.err("Hello World")
+    err_res: Result[int, str] = Result.err("Hello World!")
 
     assert ok_res.unwrap() == 42
     assert err_res.unwrap_err() == "Hello World!"
