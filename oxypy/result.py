@@ -5,7 +5,7 @@ from typing import Callable, Generic, Iterator, TypeVar
 
 from .debug import Debug
 from .default import Default
-from .panic import Panic
+from .panic import panic
 from .utils import NULL
 
 __all__ = ["Result"]
@@ -118,7 +118,7 @@ class Result(Debug, Generic[T, E]):
         If self is `Err` variant, panics
         """
         if self.is_err():
-            raise Panic("Called `Result.unwrap` on an `Err` variant")
+            panic("Called `Result.unwrap` on an `Err` variant")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_OK_VAL")
@@ -164,7 +164,7 @@ class Result(Debug, Generic[T, E]):
         If self is `Ok` variant, panics
         """
         if self.is_ok():
-            raise Panic("Called `Result.unwrap_err` on an `Ok` variant")
+            panic("Called `Result.unwrap_err` on an `Ok` variant")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_ERR_VAL")
@@ -177,7 +177,7 @@ class Result(Debug, Generic[T, E]):
         If self is `Err` variant, panics with the specified error message
         """
         if self.is_err():
-            raise Panic(msg)
+            panic(msg)
         else:
             return self.unwrap()
 
@@ -188,7 +188,7 @@ class Result(Debug, Generic[T, E]):
         If self is `Ok` variant, panics with the specified error message
         """
         if self.is_ok():
-            raise Panic(msg)
+            panic(msg)
         else:
             return self.unwrap_err()
 

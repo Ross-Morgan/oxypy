@@ -5,7 +5,7 @@ from typing import Callable, Generic, TypeVar
 
 from .debug import Debug
 from .default import Default
-from .panic import Panic
+from .panic import panic
 from .utils import NULL
 
 __all__ = ["Either"]
@@ -54,7 +54,7 @@ class Either(Debug, Generic[L, R]):
         return self.__repr__()
 
     def __setattr__(self, _name, _value) -> None:
-        raise NotImplementedError
+        return NotImplemented
 
     def __debug_str__(self) -> str:
         return self.__repr__()
@@ -106,7 +106,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, panics
         """
         if self.is_right():
-            raise Panic("Called `Either.unwrap_left` on a `Right` variant")
+            panic("Called `Either.unwrap_left` on a `Right` variant")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_LEFT_VAL")
@@ -119,7 +119,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, returns contained value
         """
         if self.is_left():
-            raise Panic("Called `Either.unwrap_right` on a `Left` variant")
+            panic("Called `Either.unwrap_right` on a `Left` variant")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_RIGHT_VAL")
@@ -134,7 +134,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, panics with the specified error message
         """
         if self.is_right():
-            raise Panic(msg)
+            panic(msg)
         else:
             return self.unwrap_left()
 
@@ -145,7 +145,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, returns the contained value
         """
         if self.is_left():
-            raise Panic(msg)
+            panic(msg)
         else:
             return self.unwrap_right()
 

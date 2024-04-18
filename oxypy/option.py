@@ -5,7 +5,7 @@ from typing import Callable, Generic, Iterator, TypeVar
 
 from .debug import Debug
 from .default import Default
-from .panic import Panic
+from .panic import panic
 from .result import Result
 from .utils import NULL
 
@@ -139,7 +139,7 @@ class Option(Debug, Default, Generic[T]):
         If self is `None` variant, panics
         """
         if self.is_none():
-            raise Panic("Called `Option.unwrap` on a `None` value")
+            panic("Called `Option.unwrap` on a `None` value")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_SOME_VAL")
@@ -182,7 +182,7 @@ class Option(Debug, Default, Generic[T]):
         If self is `None` variant, panics with specified error message
         """
         if self.is_none():
-            raise Panic(msg)
+            panic(msg)
         else:
             return self.unwrap()
 
