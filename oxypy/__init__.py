@@ -8,8 +8,8 @@ __all__ = [
     "PartialEq", "PartialOrd",
 ]
 
-__version_info__ = (1, 0, 1)
-__version__ = ".".join(__version_info__)
+__version_info__ = (1, 1, 0)
+__version__ = "1.1.0"
 __author__ = "Ross Morgan"
 __email__ = "rmorgan512@protonmail.ch"
 
