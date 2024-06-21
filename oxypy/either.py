@@ -53,7 +53,7 @@ class Either(Debug, Generic[L, R]):
     def __str__(self) -> str:
         return self.__repr__()
 
-    def __setattr__(self, _name, _value) -> None:
+    def __setattr__(self, _name, _value):
         return NotImplemented
 
     def __debug_str__(self) -> str:
@@ -106,7 +106,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, panics
         """
         if self.is_right():
-            panic("Called `Either.unwrap_left` on a `Right` variant")
+            panic(msg="Called `Either.unwrap_left` on a `Right` variant")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_LEFT_VAL")
@@ -119,7 +119,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, returns contained value
         """
         if self.is_left():
-            panic("Called `Either.unwrap_right` on a `Left` variant")
+            panic(msg="Called `Either.unwrap_right` on a `Left` variant")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_RIGHT_VAL")
@@ -134,7 +134,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, panics with the specified error message
         """
         if self.is_right():
-            panic(msg)
+            panic(msg=msg)
         else:
             return self.unwrap_left()
 
@@ -145,7 +145,7 @@ class Either(Debug, Generic[L, R]):
         If self is `Right` variant, returns the contained value
         """
         if self.is_left():
-            panic(msg)
+            panic(msg=msg)
         else:
             return self.unwrap_right()
 

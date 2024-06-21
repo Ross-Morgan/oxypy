@@ -5,7 +5,7 @@
 __all__ = [
     "Either", "Option", "Result",
     "dbg", "Debug", "Default",
-    "PartialEq", "PartialOrd",
+    "panic", "PartialEq", "PartialOrd",
 ]
 
 __version_info__ = (1, 1, 0)

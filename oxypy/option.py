@@ -139,7 +139,7 @@ class Option(Debug, Default, Generic[T]):
         If self is `None` variant, panics
         """
         if self.is_none():
-            panic("Called `Option.unwrap` on a `None` value")
+            panic(msg="Called `Option.unwrap` on a `None` value")
         else:
             return object.__getattribute__(
                 self, object.__getattribute__(self, "__INNER_SOME_VAL")
@@ -182,7 +182,7 @@ class Option(Debug, Default, Generic[T]):
         If self is `None` variant, panics with specified error message
         """
         if self.is_none():
-            panic(msg)
+            panic(msg=msg)
         else:
             return self.unwrap()
 
