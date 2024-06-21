@@ -24,14 +24,14 @@ Removed Methods:
 Reasons:
 
 - Methods relating to references are useless due to lack of them in Python.
-- Unchecked methods are unneccessary due to the lac of the unsafe system.
+- Unchecked methods are unneccessary due to the lack of the unsafe system.
 - Type dependent methods are practically impossible due to the dynamic type system.
 
 ---
 
 ## Examples
 
-**Note:** *Type annotations are not always necessary, but are done here for brevity*
+**Note:** *Type annotations are not always necessary, but are done here for clarity*
 
 ### Option
 
